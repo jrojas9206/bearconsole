@@ -14,6 +14,6 @@ Currently, the platform offers the following games:
 ## Installation 
 
 This project requires:
-    - Python 3.9
-    - PyQT 5
+- Python 3.9
+- PyQT 5
 
