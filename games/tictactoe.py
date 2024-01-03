@@ -4,14 +4,20 @@ Model-View implementation
 
 Date: 231230
 Author: Juan Pablo ROJAS 
-PyQt
+Requirements: PyQt5
 """
 import sys 
 
 class TicTacToe:
+
+    GAME_NAME = "Tictactoe"
+    VERSION = "0.0.2"
+
     def __init__(self, player1:str="X", player2:str="O"):
         self._board = []
         self._board_view = ""
+        self._a_round = 0
+        self._order_players_moves = {}
         if player1 == "|" or player2 == "|":
             raise IOError(" The character | is reserved, choose another character")
         self._iplayer1 = player1 
@@ -19,13 +25,17 @@ class TicTacToe:
         self.gameStatus = {}
         self.start()
 
-    def get_requiremets(self):
+    def get_requiremets(self) -> dict:
+        """
+            Get the main definitions need it from the user
+            this is useful for the Menu Object 
+        """
         return {
             "player1":str,
             "player2":str
         }
 
-    def start(self):
+    def start(self) -> None:
         """
             Create a lista that represent 
             the board with which the user will
@@ -38,6 +48,7 @@ class TicTacToe:
         columns_names = [" A", " ", "B", " ", "C"]
         rows_names = ["1 ", "  ", "2 ", "  ", "3 "]
         self._board = []
+        self._order_players_moves = {a_round_f: 0 if a_round_f%2 == 0 else 1 for a_round_f in  range(10)}
         # Create the list to work. each character 
         # in the tic tac toe's row is related to a position in the list.
         # Each row of the keyboard is a sublist  
@@ -56,7 +67,7 @@ class TicTacToe:
                     tmp.append(" ")
             self._board.append(tmp)
 
-    def update(self, player:dict):
+    def update(self, player:dict) -> None:
         """
           Update the keyboard base on the 
           player movement 
@@ -73,16 +84,19 @@ class TicTacToe:
              raise ValueError("Index %i is outside of range for a object with length 3" %(player["playerSelection"][0]))
         row2update = player["playerSelection"][0]+(player["playerSelection"][0]-1)
         column2update = ref_dict[player["playerSelection"][1]]
+        if self._board[row2update][column2update] != " ":
+            raise Warning("[WARNING] this position was already selected")
+         
         self._board[row2update][column2update] = self._iplayer1 if player["playerID"] == 0 else self._iplayer2
         self.gameStatus = self.verifyBoard()
 
-    def get_gamestatus(self):
+    def get_gamestatus(self) -> dict:
         """
             General information about the game 
         """
         return self.gameStatus
 
-    def verifyBoard(self):
+    def verifyBoard(self) -> dict:
         """
             Verify if there is winner in row or column 
         """
@@ -143,166 +157,59 @@ class TicTacToe:
     
         return  d2ret
     
-    def get_board(self):
+    def next_move(self, newrow_pos:int, newcolumn:str) -> None:
+        """
+            Automatic handler for the rounds along the game
+            this method get as input a move and automatically asing it 
+            to the player that must play in this round 
+        """
+        player_move = {
+                "playerID": self._order_players_moves[self._a_round],  # 0 or 1
+                "playerSelection": [newrow_pos ,newcolumn] # coordinates [row:int, columns:str]
+        }
+        self.update(player_move)
+        self._a_round += 1
+        if self._a_round>=10:
+            raise ValueError("Unexpected number of matches!!")
+
+    def get_player(self) -> int:
+        """
+            This player returns the player that have to make the move
+            in the actual round
+            :return: int, Player that need to make the move
+        """
+        return self._order_players_moves[self._a_round]
+
+    def get_board(self) -> list:
         """
             Get the list that represent the board
+            :return: list, Game representation 
         """
         return self._board
 
-    def restart(self):
+    def get_name(self) -> str:
+        """
+            Return the game name
+            :return: str
+        """
+        return self.GAME_NAME
+
+    def get_actual_round_id(self) -> int:
+        """
+            Return the round that is on going
+            :return: int, Actual round 
+        """
+        return self._a_round
+
+    def get_version(self) -> str:
+        """
+            Return the game version 
+            :return: str, game version 
+        """
+        return self.VERSION
+
+    def restart(self) -> None:
         """
             Set the board to their initial parameters
         """
         self.start()
-
-class Board:
-    """
-        Class to visualize the tic tac toe 
-        in the terminal     
-    """
-    def __init__(self):
-        self._game_board_ = "ttt"
-
-    def set_model(self, model):
-        self._board = model.get_board()
-
-    def prepare_board(self):
-        """
-            Print the board in its actual state 
-        """
-        a_board = ""
-        for a_row in self._board:
-            a_board += "".join(a_row+["\n"])
-        self._board_view = a_board
-
-    def display_board(self):
-        self.prepare_board()
-        print(self._board_view)
-
-
-class Menu:
-    def __init__(self, game, board):
-        self.iBoard = board
-        self.i_gameID =  -1
-        self.lstGames = {0: game}
-        self.selectedGame = ""
-
-    def start_menu(self):
-        lck = True
-        state = 0 
-        while(lck):
-            if state == 0:
-                print("Welcome to PLadventure")
-                print(" -> Games to play:\n  -> [0] TicTacToe")
-                print(" -> to quit the game press q")
-                userInput = input("- Plese chose the game you want to play: ")
-                if userInput == "q":
-                    lck = False
-                    continue
-                self.i_gameID = int(userInput) 
-                state += 1
-            elif state == 1:
-                self.selectedGame = self.lstGames[self.i_gameID]
-                status = self.runGame()
-                state += 1
-            else:
-                print(status)
-                print("Finish")
-                state = 0
-
-    def runGame(self):
-        runGame = True
-        stateGame = 0
-        active_player = 0
-        rowOK = False
-        columnOk = False 
-        while(runGame):
-            if stateGame==0:
-                print("#"*10)
-                print("Welcome to TicTacToe!! |O_X|/-")
-                print("#"*10)
-                player1_def = input("Player 1: Choose your character to play: ")
-                player2_def = input("Player 2: Choose your character to play: ")
-                if player1_def == "q" or player2_def == "q":
-                    sys.exit()
-                print(" %s VS %s" %(player1_def, player2_def))
-                self.iBoard.set_model(self.selectedGame)
-                self.iBoard.display_board()
-                stateGame=1
-            elif stateGame == 1:
-                if active_player <= 1:
-                    if not rowOK:
-                        row = input("Player %i select the row for your movement: " %(active_player+1))
-                    if row == "q":
-                        sys.exit()
-                    try:
-                        row = int(row)
-                        rowOK = True
-                    except ValueError:
-                        print("[Warning] Select a number between 1 to 3, letters are not accecpter")
-                        continue
-                    if not columnOk:
-                        column = input("Player %i select the column for your movement: " %(active_player+1))
-                    if column == "q":
-                        sys.exit()
-                    player = {
-                            'playerID': active_player,  # 0 or 1
-                            'playerSelection': [row, column] # coordinates [row:int, columns:str]
-                    }
-                    try:
-                        self.selectedGame.update(player)
-                        columnOk = True
-                    except KeyError:
-                        print("[Warning] Value outside of the board. Available Option: A,B,C")
-                        continue
-                    self.iBoard.display_board()
-                    statusGame = self.selectedGame.get_gamestatus()
-                    if statusGame["winner"] != 0:
-                        print(" ### The winner is Player %i ###" %(statusGame["winner"]))
-                        stateGame+=1
-                        
-                    if statusGame["allLose"]:
-                        print("  ### No Winner (^-^)/& ###")
-                        stateGame+=1
-                    active_player+=1
-                    rowOK = False
-                    columnOk = False
-                elif active_player > 1:
-                    active_player = 0
-            else:
-                runGame = False
-        return statusGame    
-                    
-
-def main():
-    ttt = TicTacToe()
-    tttboard = Board()
-
-    amenu = Menu(ttt, tttboard)
-    amenu.start_menu()
-    # ttt = TicTacToe()
-    # ttt.start()
-    # board = Board(ttt)
-    # # board.display_board()
-    # player = {
-    # "playerID": 0,  # 0 or 1
-    # "playerSelection": [3,"A"] # coordinates [x, y]
-    # }
-    # ttt.update(player)
-    # board.display_board()
-    # player = {
-    # "playerID": 0,  # 0 or 1
-    # "playerSelection": [2,"B"] # coordinates [x, y]
-    # }
-    # ttt.update(player)
-    # player = {
-    # "playerID": 0,  # 0 or 1
-    # "playerSelection": [1,"C"] # coordinates [x, y]
-    # }
-    # ttt.update(player)
-    # board.display_board()
-
-    return 0 
-
-if __name__ == "__main__":
-    sys.exit(main())

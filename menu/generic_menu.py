@@ -1,10 +1,20 @@
+"""
+Generic terminal board 
+The model creates a string that represent 
+the board of the game and displayed
+
+Date: 231230
+Author: Juan Pablo ROJAS 
+Requirements: PyQt5
+"""
+
 import sys 
 
 class Menu:
-    def __init__(self, game, board):
+    def __init__(self, game:dict, board):
         self.iBoard = board
         self.i_gameID =  -1
-        self.lstGames = {0: game}
+        self.lstGames = game
         self.selectedGame = ""
 
     def start_menu(self):
@@ -13,7 +23,9 @@ class Menu:
         while(lck):
             if state == 0:
                 print("Welcome to PLadventure")
-                print(" -> Games to play:\n  -> [0] TicTacToe")
+                print(" -> Games to play:")
+                for a_game_id in self.lstGames.keys():
+                    print("  -> %s: %s" %(a_game_id, self.lstGames[a_game_id].get_name()))
                 print(" -> to quit the game press q")
                 userInput = input("- Plese chose the game you want to play: ")
                 if userInput == "q":
@@ -26,7 +38,22 @@ class Menu:
                 status = self.runGame()
                 state += 1
             else:
-                print(status)
+                if(status["winner"] != 0):
+                    msg2print = """
+###############
+    Congratulations Player %s you are the winner!
+                        *\\(^-^)/*
+###############    
+"""%(str(status["winner"]))
+                if status["allLose"]:
+                    msg2print = """
+###############
+    There is no winners!! Try again!!
+                        +\\(~_~)/+
+###############    
+"""
+
+                print(msg2print)
                 print("Finish")
                 state = 0
 
@@ -39,14 +66,14 @@ class Menu:
         while(runGame):
             if stateGame==0:
                 print("#"*10)
-                print("Welcome to TicTacToe!! |O_X|/-")
+                print("Welcome to %s!! |O_X|/-" %(self.lstGames[self.i_gameID].get_name()))
                 print("#"*10)
                 player1_def = input("Player 1: Choose your character to play: ")
                 player2_def = input("Player 2: Choose your character to play: ")
                 if player1_def == "q" or player2_def == "q":
                     sys.exit()
                 print(" %s VS %s" %(player1_def, player2_def))
-                self.iBoard.set_model(self.selectedGame)
+                self.iBoard.load_game(self.selectedGame)
                 self.iBoard.display_board()
                 stateGame=1
             elif stateGame == 1:
@@ -65,12 +92,8 @@ class Menu:
                         column = input("Player %i select the column for your movement: " %(active_player+1))
                     if column == "q":
                         sys.exit()
-                    player = {
-                            'playerID': active_player,  # 0 or 1
-                            'playerSelection': [row, column] # coordinates [row:int, columns:str]
-                    }
                     try:
-                        self.selectedGame.update(player)
+                        self.iBoard.next_move(row, column)
                         columnOk = True
                     except KeyError:
                         print("[Warning] Value outside of the board. Available Option: A,B,C")
