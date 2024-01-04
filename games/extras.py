@@ -9,13 +9,20 @@ Requirements: PyQt5
 """
 hangman_dictionary = ["hola", "tomate", "adios", "arte", "diccionario"]
 hangman_art={1:"""
+             
+
+
+             
 |----------|
 """, 
 2: """
+
+
       |
 |-----|-----|
 """,
-3:"""  
+3:"""
+
       | 
       |
 |-----|-----|
