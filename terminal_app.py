@@ -7,6 +7,7 @@ Requirements: PyQt5
 """
 import sys 
 from games.tictactoe import TicTacToe
+from games.hangman import Hangman
 from board.board_generic import Board
 from menu.generic_menu import Menu
 
@@ -67,11 +68,20 @@ def test_menu():
     m = Menu({0: ttt, 1:ttt}, b)
     m.start_menu()
 
+def test_hangman():
+    hman = Hangman()
+    b = Board()
+    b.load_game(hman)
+    b.next_move(column="a")
+    b.next_move(column="z")
+    b.next_move(column="z")
+    b.display_board()
 
 def main():
     #test_winner_player2()
     #test_board()
-    test_menu()
+    #test_menu()
+    test_hangman()
 
     return 0
 
