@@ -60,15 +60,19 @@ It is your turn player: %s
             :return: int, 
         """
         return self._igame.get_player() 
-    
-    def next_move(self, row:int, column:str):
+
+    def next_move(self, row:int=None, column:str=""):
         """
             Execute a move action for the actual round 
             :param row: int, Row in the board
             :param column: str, Column name [A-Z]             
         """
         try:
-            self._igame.next_move(row, column)
+            if row is None:
+                self._igame.next_move(column)
+            else:
+                self._igame.next_move(row, column)
+            self._get_board()
         except Warning as w:
             print(w)
 

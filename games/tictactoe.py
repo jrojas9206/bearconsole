@@ -213,3 +213,6 @@ class TicTacToe:
             Set the board to their initial parameters
         """
         self.start()
+
+    def get_menu(self):
+        print("Work in progress")

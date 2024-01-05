@@ -90,7 +90,6 @@ class Hangman:
         a_art = a_art.split("\n")
         tmp = []
         for a_row in a_art:
-            print(a_row)
             _tmp = [i for i in a_row if i != "\n"]
             tmp.append(_tmp)
         return tmp
@@ -105,7 +104,7 @@ class Hangman:
         """
             This Hangman is a game for 1 player 
         """
-        return 1
+        return 0
 
     def get_actual_round_id(self) -> int:
         """

@@ -64,8 +64,9 @@ def test_board():
 
 def test_menu():
     ttt = TicTacToe()
+    hman = Hangman()
     b = Board()
-    m = Menu({0: ttt, 1:ttt}, b)
+    m = Menu({0: ttt, 1:hman}, b)
     m.start_menu()
 
 def test_hangman():
@@ -73,15 +74,19 @@ def test_hangman():
     b = Board()
     b.load_game(hman)
     b.next_move(column="a")
+    b.display_board()
+    print("-"*10)
     b.next_move(column="z")
+    b.display_board()
+    print("-"*10)
     b.next_move(column="z")
     b.display_board()
 
 def main():
     #test_winner_player2()
     #test_board()
-    #test_menu()
-    test_hangman()
+    test_menu()
+    #test_hangman()
 
     return 0
 
