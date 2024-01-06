@@ -9,7 +9,7 @@ of the user with the platform called **Menu**.
 Currently, the platform offers the following games:
 
  - TicTacToe [31/12/2023]
- - Hangman [**In progress**]
+ - Hangman [06/01/2023]
 
 ## Installation 
 
