@@ -24,6 +24,7 @@ class Hangman:
         self._board_size = []
         self._catched_letters = []
         self._attempts = 0
+        self._errors_usr = 0
         self._a_round = 0
         self._selected_word_len = 0
         self._order_players_moves = {}
@@ -70,14 +71,18 @@ class Hangman:
         if icharacter not in self._word2catch:
             self.hagman_art_id += 1
         else:
-            self._catched_letters = [icharacter.lower() if icharacter.lower() == self._word2catch[i] else " " for i in range(len(self._word2catch))]
+            for idx, a_letter in enumerate(self._word2catch):
+                if icharacter.lower() == a_letter and self._catched_letters[idx] == " ":
+                    self._catched_letters[idx] = icharacter
+
+            #self._catched_letters = [icharacter.lower() if (icharacter.lower() == self._word2catch[i] and self._catched_letters[i] == " ") else " " for i in range(len(self._word2catch))]
         self._a_round += 1
-        self._attempts -= 1
         self.verify_status()
+        
         self._game_status_ = {
                    "winner":1 if self._win  else 0,
                    "allLose": self._end,
-                   "end": self._end,
+                   #"end": self._end,
                    'round': self._a_round,
                    "lifes": self._attempts, 
                    "art_id": self.hagman_art_id,
@@ -88,9 +93,9 @@ class Hangman:
         """
             Verify if there is a winer or if the game need to finish 
         """
-        if self._a_round >= 7:
+        if self.hagman_art_id == len(list(hangman_art.keys()))-1:
             self._end = True 
-        if sum([1 if self._catched_letters[i] != " " else 0 for i in range(len(self._word2catch))]) == len(self._word2catch):
+        if sum([1 if self._catched_letters[i] != " " else 0 for i in range(len(self._word2catch))]) >= len(self._word2catch):
             self._win = True
         else:
             self._win = False
@@ -108,6 +113,11 @@ class Hangman:
         for a_row in a_art:
             _tmp = [i for i in a_row if i != "\n"]
             tmp.append(_tmp)
+
+        usr_catches = [' ']+["_" if i==" " else i for i in self._catched_letters]+[' ']
+        tmp.append(["#"*(len(self._word2catch)+2)])
+        tmp.append(usr_catches)
+        tmp.append(["#"*(len(self._word2catch)+2)])
         return tmp
 
     def get_word2catch(self):

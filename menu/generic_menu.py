@@ -127,6 +127,7 @@ class Menu:
 
                     if stateGame>=2:
                         break        
-            if stateGame == 2:
+            if stateGame >= 2:
                 runGame = False
-        return 0
+                break 
+        return gameGeneralStatus
