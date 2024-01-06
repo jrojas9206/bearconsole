@@ -25,14 +25,18 @@ class TicTacToe:
         self.gameStatus = {}
         self.start()
 
-    def get_requiremets(self) -> dict:
+    def get_requirements(self) -> dict:
         """
             Get the main definitions need it from the user
             this is useful for the Menu Object 
         """
         return {
-            "player1":str,
-            "player2":str
+            "nplayers": 2,
+            "player_input": [int, str],
+            "player_board_reference": ["row", "column"],
+            "playerReference":"character",
+            "range":[[1,3], ["A", "C"]],
+            "initLogo": ["~(x-O)P", "~(O-x)P"]
         }
 
     def start(self) -> None:
@@ -100,10 +104,13 @@ class TicTacToe:
         """
             Verify if there is winner in row or column 
         """
-        d2ret = {"winner": 0,
-                 "isColumn": False,
-                 "nPos": -1,
-                 "allLose": False}
+        d2ret = {
+                "winner": 0, # The player id 
+                "allLose": False, # The expected round are over 
+                "end":False,
+                "isColumn": False, 
+                "nPos": -1,
+                }
         cntr = 0
         for playerID, a_player in enumerate([self._iplayer1, self._iplayer2], start=1):
             for idx, actual in enumerate(self._board):
@@ -112,6 +119,7 @@ class TicTacToe:
                 if sum(tmp) == 3:
                     d2ret["winner"] = playerID
                     d2ret["nPos"] = idx
+                    d2ret["end"] = True
                     return d2ret
                 # Column verification 
                 tmp_v = [1 if self._board[i][idx] == a_player else 0  for i in range(len(self._board))] 
@@ -119,6 +127,7 @@ class TicTacToe:
                     d2ret["winner"] = playerID
                     d2ret["nPos"] = idx
                     d2ret["isColumn"] = True
+                    d2ret["end"] = True
                     return d2ret
                 cntr += sum(tmp)
                 if cntr==9:
@@ -126,6 +135,7 @@ class TicTacToe:
                     d2ret["nPos"] = 0
                     d2ret["isColumn"] = False
                     d2ret["allLose"] = True
+                    d2ret["end"] = True
                     return d2ret  
             # Diagonal 
             # Left to right
@@ -138,6 +148,7 @@ class TicTacToe:
             if sum(tmp) == 3:
                 d2ret["winner"] = playerID
                 d2ret["nPos"] = idx
+                d2ret["end"] = True
                 return d2ret                
 
             tmp = []
@@ -148,12 +159,14 @@ class TicTacToe:
             if sum(tmp) == 3:
                 d2ret["winner"] = playerID
                 d2ret["nPos"] = idx
+                d2ret["end"] = True
                 return d2ret 
 
         d2ret = {"winner": 0,
                  "isColumn": False,
                  "nPos": -1,
-                 "allLose": False}
+                 "allLose": False,
+                 "end":False,}
     
         return  d2ret
     

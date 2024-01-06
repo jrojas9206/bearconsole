@@ -28,8 +28,19 @@ class Hangman:
         self._selected_word_len = 0
         self._order_players_moves = {}
         self.hagman_art_id = 0
+        self._game_status_ = {}
         self._win = False
         self._end = False
+
+    def get_requirements(self):
+        return {
+            "nplayers": 1,
+            "player_input": [str],
+            "player_board_reference": ["letter"],
+            "playerReference":"symbole",
+            "range":[["A", "Z"]],
+            "initLogo": ["_(-=-)_", "-(^_^)-", "\\(O_O)/"]
+        }
 
     def start(self) -> None:
         """
@@ -63,13 +74,15 @@ class Hangman:
         self._a_round += 1
         self._attempts -= 1
         self.verify_status()
-        dic2ret = {'round': self._a_round,
+        self._game_status_ = {
+                   "winner":1 if self._win  else 0,
+                   "allLose": self._end,
+                   "end": self._end,
+                   'round': self._a_round,
                    "lifes": self._attempts, 
                    "art_id": self.hagman_art_id,
                    "catched_letters": self._catched_letters,
-                   "win": self._win,
-                   "end": self._end}
-        return dic2ret
+                   }
     
     def verify_status(self):
         """
@@ -81,6 +94,9 @@ class Hangman:
             self._win = True
         else:
             self._win = False
+
+    def get_gamestatus(self) -> dict:
+        return self._game_status_
 
     def get_board(self):
         """

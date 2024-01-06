@@ -33,7 +33,16 @@ class Board:
         self._game_board_ = self._igame.get_board()
 
     def get_game_name(self):
+        """
+            Get the name of the name that was loaded 
+        """
         return self._igame.get_name() 
+
+    def get_game_status(self):
+        """
+            Get some information about the game status
+        """
+        return self._igame.get_gamestatus()
 
     def prepare_board(self):
         """
@@ -75,6 +84,14 @@ It is your turn player: %s
             self._get_board()
         except Warning as w:
             print(w)
+
+    def get_game_requirements(self):
+        """
+            return a dict that contain 
+            the number of players, and the type of input
+            they have to set
+        """
+        return self._igame.get_requiremets()
 
     def display_board(self):
         status_msg = """##########################

@@ -9,17 +9,20 @@ Requirements: PyQt5
 """
 
 import sys 
-
+import time 
+import os 
 class Menu:
     def __init__(self, game:dict, board):
         self.iBoard = board
         self.i_gameID =  -1
         self.lstGames = game
         self.selectedGame = ""
+        self._game_requirements = {}
 
     def start_menu(self):
         lck = True
         state = 0 
+        os.system('cls' if os.name == 'nt' else 'clear')
         while(lck):
             if state == 0:
                 print("Welcome to PLadventure")
@@ -27,7 +30,7 @@ class Menu:
                 for a_game_id in self.lstGames.keys():
                     print("  -> %s: %s" %(a_game_id, self.lstGames[a_game_id].get_name()))
                 print(" -> to quit the game press q")
-                userInput = input("- Plese chose the game you want to play: ")
+                userInput = input("- Please chose the game you want to play: ")
                 if userInput == "q":
                     lck = False
                     continue
@@ -35,83 +38,95 @@ class Menu:
                 state += 1
             elif state == 1:
                 self.selectedGame = self.lstGames[self.i_gameID]
+                self.iBoard.load_game(self.selectedGame)
+                self._game_requirements = self.selectedGame.get_requirements()
                 status = self.runGame()
                 state += 1
             else:
-                if(status["winner"] != 0):
-                    msg2print = """
-###############
-    Congratulations Player %s you are the winner!
-                        *\\(^-^)/*
-###############    
-"""%(str(status["winner"]))
-                if status["allLose"]:
-                    msg2print = """
-###############
-    There is no winners!! Try again!!
-                        +\\(~_~)/+
-###############    
-"""
-
-                print(msg2print)
-                print("Finish")
+                print("---END---")
+                time.sleep(2)
+                self.clean_terminal()
                 state = 0
+
+    def clean_terminal(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     def runGame(self):
         runGame = True
         stateGame = 0
         active_player = 0
-        rowOK = False
-        columnOk = False 
+        position = []
+        player_lst = []
+        initAnimationTime = 5
+        idx_init_msg = 0
+        player_character = []
+        init_message = ""
+        self.clean_terminal()
         while(runGame):
-            if stateGame==0:
-                print("#"*10)
-                print("Welcome to %s!! |O_X|/-" %(self.lstGames[self.i_gameID].get_name()))
-                print("#"*10)
-                player1_def = input("Player 1: Choose your character to play: ")
-                player2_def = input("Player 2: Choose your character to play: ")
-                if player1_def == "q" or player2_def == "q":
-                    sys.exit()
-                print(" %s VS %s" %(player1_def, player2_def))
-                self.iBoard.load_game(self.selectedGame)
+            print("gameState", stateGame)
+            if stateGame == 0:
+                # This could be set in the board class not it in the menu 
+                while(initAnimationTime>0):
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    init_message = """
+                    %s
+                    Welcome to %s
+                    %s%s
+                    %s
+                    """ %("#"*(11+len(self.iBoard.get_game_name())), 
+                        self.iBoard.get_game_name(),
+                        " "*int(((11+len(self.iBoard.get_game_name()))/2)-(len(self._game_requirements["initLogo"][idx_init_msg])/2)),
+                        self._game_requirements["initLogo"][idx_init_msg],
+                        "#"*(11+len(self.iBoard.get_game_name())))
+                    print(init_message)
+                    idx_init_msg += 1
+                    if idx_init_msg >= len(self._game_requirements["initLogo"]):
+                        idx_init_msg = 0
+                    initAnimationTime -= 1
+                    time.sleep(0.5)
+                print(" -> Select your character (^-^)/")
+                for a_player in range(self._game_requirements["nplayers"]):
+                    generic_input = input("  -> Player %s select the %s to play:" %((a_player+1) if self._game_requirements["nplayers"]==2 else "",
+                                                                   self._game_requirements["playerReference"],
+                                                                   ))
+                    player_character.append(generic_input)
+                print(" -> Be ready! the game will start!!")
+                time.sleep(0.5)
+                self.clean_terminal()
+                stateGame += 1
+            if stateGame == 1:
+                self.clean_terminal()
+                print(init_message)
                 self.iBoard.display_board()
-                stateGame=1
-            elif stateGame == 1:
-                if active_player <= 1:
-                    if not rowOK:
-                        row = input("Player %i select the row for your movement: " %(active_player+1))
-                    if row == "q":
-                        sys.exit()
-                    try:
-                        row = int(row)
-                        rowOK = True
-                    except ValueError:
-                        print("[Warning] Select a number between 1 to 3, letters are not accecpter")
-                        continue
-                    if not columnOk:
-                        column = input("Player %i select the column for your movement: " %(active_player+1))
-                    if column == "q":
-                        sys.exit()
-                    try:
-                        self.iBoard.next_move(row, column)
-                        columnOk = True
-                    except KeyError:
-                        print("[Warning] Value outside of the board. Available Option: A,B,C")
-                        continue
+                player_movements = []
+                for idx_player in range(self._game_requirements["nplayers"]):
+                    player_movements = []
+                    for a_input in self._game_requirements["player_board_reference"]:
+                        generic_input = input("  -> Player %s [%s] please select the %s for your actual movement: " %( idx_player+1, 
+                                                                      player_character[idx_player],
+                                                                      a_input))
+                        if(generic_input == "q"):
+                            sys.exit()
+                        player_movements.append(generic_input)
+                    self.clean_terminal()
+                    print(init_message)
+                    if len(self._game_requirements["player_board_reference"]) == 2:
+                        self.iBoard.next_move(int(player_movements[0]), player_movements[1])
+                    elif len(self._game_requirements["player_board_reference"]) == 1:
+                         self.iBoard.next_move(column=player_movements[0])
                     self.iBoard.display_board()
-                    statusGame = self.selectedGame.get_gamestatus()
-                    if statusGame["winner"] != 0:
-                        print(" ### The winner is Player %i ###" %(statusGame["winner"]))
-                        stateGame+=1
-                        
-                    if statusGame["allLose"]:
-                        print("  ### No Winner (^-^)/& ###")
-                        stateGame+=1
-                    active_player+=1
-                    rowOK = False
-                    columnOk = False
-                elif active_player > 1:
-                    active_player = 0
-            else:
+                    gameGeneralStatus = self.iBoard.get_game_status()
+                    if(gameGeneralStatus["winner"] != 0):
+                        print("***Congratulations Player %s you have won!!" %(gameGeneralStatus["winner"] if self._game_requirements["nplayers"]==2 else "")) 
+                        stateGame += 1
+                        break
+                    if(gameGeneralStatus["allLose"]):
+                        print("***There is no winners in this game!! Try again!!")
+                        stateGame += 1
+                        break
+
+                    if stateGame>=2:
+                        break        
+            if stateGame == 2:
                 runGame = False
-        return statusGame
+        return 0
