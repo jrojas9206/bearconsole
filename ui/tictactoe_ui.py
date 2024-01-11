@@ -5,6 +5,12 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
+import resources
+
+class PushButton_xo(qtw.QPushButton):
+    def __init__(self):
+        super().__init__()
+
 
 class MainWindow(qtw.QWidget):
 
@@ -25,6 +31,8 @@ class MainWindow(qtw.QWidget):
                 button_xo.setMinimumHeight(100)
                 board_layout.layout().addWidget(button_xo, a_row, a_column)
         self.show()
+
+    
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)

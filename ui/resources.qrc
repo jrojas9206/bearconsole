@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="players_icon">
+        <file>icon/circle.png</file>
+        <file>icon/delete.png</file>
+    </qresource>
+</RCC>
