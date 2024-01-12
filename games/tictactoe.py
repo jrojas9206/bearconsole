@@ -227,5 +227,8 @@ class TicTacToe:
         """
         self.start()
 
+    def get_player_symbole(self):
+        return self._iplayer1, self._iplayer2
+
     def get_menu(self):
         print("Work in progress")
