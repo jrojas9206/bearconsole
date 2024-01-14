@@ -7,16 +7,20 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 
 from ui.tictactoe_ui import Tictactoe_ui
-from games.tictactoe import TicTacToe
+from ui.hangman_ui import Hangman_ui
 
+from games.tictactoe import TicTacToe
+from games.hangman import Hangman
 
 
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
 
-    ttt_model = TicTacToe()
-
-    mw = Tictactoe_ui(ttt_model)
+    #ttt_model = TicTacToe()
+    #mw = Tictactoe_ui(ttt_model)
     
+    hm = Hangman()
+    mw = Hangman_ui(hm)
+
     sys.exit(app.exec())
