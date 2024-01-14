@@ -13,7 +13,14 @@ class Hangman_ui(qtw.QWidget):
 
     def __init__(self, gameModel = None):
         super().__init__()
-
+        self._model = gameModel
+        self._rount = 0
+        self._main_label2draw = qtw.QLabel()
+        main_layout = qtw.QHBoxLayout()
+        self.setLayout(main_layout)
+        main_layout.addWidget(self._main_label2draw)
+        letter_layout = qtw.QHBoxLayout()
+                
         self.show()
 
 if __name__ == "__main__":
