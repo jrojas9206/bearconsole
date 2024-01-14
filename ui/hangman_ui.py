@@ -54,23 +54,35 @@ class Hangman_ui(qtw.QWidget):
         main_layout.addLayout(self._letter_layout)
         # Set spaces for the user to fulfill 
         self.fill_layout(self._letter_layout, self._word2catch)
-        # for idx in range(len(self._word2catch)):
-        #     _tmp_e_line = Hm_qeditline()
-        #     _tmp_e_line.set_id_pos(idx)
-        #     _tmp_e_line.setMaxLength(self.MAX_LEN_CHARACTER_LINE_EDIT)
-        #     _tmp_e_line.textChanged.connect(self._next_move)
-        #     self._letter_layout.addWidget(_tmp_e_line)
 
         _layout_buttons = qtw.QHBoxLayout()
         main_layout.addLayout(_layout_buttons)
         restart_button = qtw.QPushButton("Restart")
+        restart_button.clicked.connect(self._restart)
         end_button = qtw.QPushButton("Close")
+        end_button.clicked.connect(self._close_widget)
+        
         self._attends = qtw.QLabel("Attempts: %s" %("*"*self.HANGMAN_ART_ATTENDS))
+        self._qlable_used_letters = qtw.QLabel("Used Letters: ")
         _layout_buttons.addWidget(self._attends)
+        _layout_buttons.addWidget(self._qlable_used_letters)
         _layout_buttons.addWidget(restart_button)
         _layout_buttons.addWidget(end_button)
 
         self.show()
+
+    def _close_widget(self):
+        self.close()
+
+    def _restart(self):
+        self._main_label2draw.setPixmap(self._init_hangman_art)
+        self._model.restart()
+        self._init_game_param()
+        self.dict_status = self._model.get_gamestatus()
+        self.clearLayout(self._letter_layout)
+        self.fill_layout(self._letter_layout, self._word2catch)
+        self._qlable_used_letters.setText("Used Letters: ")
+        self._attends.setText("Attempts: %s" %("*"*self.dict_status["lifes"]))
 
     def _init_game_param(self) -> None:
         self._model.start()
@@ -95,11 +107,12 @@ class Hangman_ui(qtw.QWidget):
                         print(self.dict_status)  
         else:
             if(text != ""):
-                self._model.next_move("\r")
+                self._model.next_move(text)
                 self.dict_status = self._model.get_gamestatus()
                 update_art = qtg.QPixmap(":hangman_art/illustration/hman_step_%s.png" %(self.dict_status["art_id"]))
                 self._main_label2draw.setPixmap(update_art)
                 self._attends.setText("Attempts: %s" %("*"*self.dict_status["lifes"]))
+        self._qlable_used_letters.setText("Used Letters: %s" %(str(self._model.get_used_letters())))
         self.ui_verification()
 
     def clearLayout(self, layout):
@@ -119,22 +132,14 @@ class Hangman_ui(qtw.QWidget):
     def ui_verification(self):
         if self.dict_status:
             if self.dict_status['allLose'] or self.dict_status['lifes']==0:
-                print( self.dict_status['allLose'], self.dict_status['lifes'])
                 qtw.QMessageBox.warning(self,"Hangman", "You have lost!! Try again!")
                 self._main_label2draw.setPixmap(self._init_hangman_art)
                 self._model.restart()
                 self._init_game_param()
-                self.dict_status = self._model.get_gamestatus()
-                self.clearLayout(self._letter_layout)
-                self.fill_layout(self._letter_layout, self._word2catch)
-                self._attends.setText("Attempts: %s" %("*"*self.dict_status["lifes"]))
-                
+                self._restart()
             if self.dict_status['winner'] != 0:
                 qtw.QMessageBox.warning(self,"Hangman","You have won!!! Congratulations!!")
                 self._main_label2draw.setPixmap(self._init_hangman_art)
                 self._model.restart()
                 self._init_game_param()
-                self.dict_status = self._model.get_gamestatus()
-                self.clearLayout(self._letter_layout)
-                self.fill_layout(self._letter_layout, self._word2catch)
-                self._attends.setText("Attempts: %s" %("*"*self.dict_status["lifes"]))
+                self._restart()

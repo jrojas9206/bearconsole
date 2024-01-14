@@ -26,6 +26,7 @@ class Hangman:
         self._attempts = 0
         self._errors_usr = 0
         self._a_round = 0
+        self._used_letters = []
         self._selected_word_len = 0
         self._order_players_moves = {}
         self.hagman_art_id = 0
@@ -50,6 +51,7 @@ class Hangman:
         """
         self._win = False
         self._end = False
+        self._used_letters = []
         self._a_round = 0
         self.hagman_art_id = 0
         self._word2catch =  [i for i in hangman_dictionary[randrange(0, len(hangman_dictionary))]]
@@ -76,6 +78,7 @@ class Hangman:
 
             :param icharacter: str, Letter from the user 
         """
+        self._used_letters.append(icharacter)
         if len(icharacter)>1:
             raise ValueError("Unexpected length of characters")
 
@@ -157,6 +160,9 @@ class Hangman:
             :return: str, game version 
         """
         return self.VERSION
+
+    def get_used_letters(self):
+        return "-".join(list(set(self._used_letters)))
 
     def restart(self) -> None:
         """
