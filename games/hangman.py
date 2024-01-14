@@ -50,6 +50,8 @@ class Hangman:
         """
         self._win = False
         self._end = False
+        self._a_round = 0
+        self.hagman_art_id = 0
         self._word2catch =  [i for i in hangman_dictionary[randrange(0, len(hangman_dictionary))]]
         self._selected_word_len = len(self._word2catch)
         sortedListKeys = list(hangman_art.keys())
@@ -57,7 +59,16 @@ class Hangman:
                             len(hangman_art[sortedListKeys[-1]].split('\n')[0])] # Height 
         self._attempts = len(sortedListKeys)
         self._catched_letters = [" " for _ in self._word2catch]
-        
+        self._game_status_ = {
+                   "winner":1 if self._win  else 0,
+                   "allLose": self._end,
+                   #"end": self._end,
+                   'round': self._a_round,
+                   "lifes": self._attempts, 
+                   "art_id": self.hagman_art_id,
+                   "catched_letters": self._catched_letters,
+                   }
+
     def next_move(self, icharacter:str) -> dict:
         """
             Evaluate the inputs from the user for round. and return 
@@ -70,6 +81,7 @@ class Hangman:
 
         if icharacter not in self._word2catch:
             self.hagman_art_id += 1
+            self._attempts -= 1
         else:
             for idx, a_letter in enumerate(self._word2catch):
                 if icharacter.lower() == a_letter and self._catched_letters[idx] == " ":
