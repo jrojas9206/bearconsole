@@ -162,7 +162,7 @@ class Hangman:
         return self.VERSION
 
     def get_used_letters(self):
-        return "-".join(list(set(self._used_letters)))
+        return "[%s]"%("-".join(list(set(self._used_letters))))
 
     def restart(self) -> None:
         """

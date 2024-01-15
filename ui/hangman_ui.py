@@ -10,7 +10,7 @@ try:
 except ModuleNotFoundError:
     import ui.resources
 
-class Hm_qeditline(qtw.QLineEdit):
+class Hm_qeditline(qtw.QLabel):
     
     def __init__(self):
         super().__init__()
@@ -27,6 +27,9 @@ class Hangman_ui(qtw.QWidget):
     # based on the created art 
     HANGMAN_ART_ATTENDS = 7
     MAX_LEN_CHARACTER_LINE_EDIT = 1
+    QLABEL_FONT_SIZE = 32
+    QPUSHBUTTON_FONT_SIZE = 32
+    QLINEEDIT_FONT_SIZE = 32
 
     def __init__(self, gameModel = None):
         super().__init__()
@@ -58,14 +61,27 @@ class Hangman_ui(qtw.QWidget):
         _layout_buttons = qtw.QHBoxLayout()
         main_layout.addLayout(_layout_buttons)
         restart_button = qtw.QPushButton("Restart")
+        restart_button.setStyleSheet("font-size: %spx" %(self.QPUSHBUTTON_FONT_SIZE))
         restart_button.clicked.connect(self._restart)
         end_button = qtw.QPushButton("Close")
+        end_button.setStyleSheet("font-size: %spx;" %(self.QPUSHBUTTON_FONT_SIZE))
         end_button.clicked.connect(self._close_widget)
         
         self._attends = qtw.QLabel("Attempts: %s" %("*"*self.HANGMAN_ART_ATTENDS))
-        self._qlable_used_letters = qtw.QLabel("Used Letters: ")
+        self._attends.setStyleSheet("font-size: %spx;" %(self.QLABEL_FONT_SIZE))
+        self._qlable_used_letters = qtw.QLabel("Used Letters: []")
+        self._qlable_used_letters.setStyleSheet("font-size: %spx; background-color: white;" %(self.QLABEL_FONT_SIZE))
+        self.ql_input = qtw.QLabel("Input: ")
+        self.ql_input.setStyleSheet("background-color: white; font-size: %spx" %(self.QLABEL_FONT_SIZE))
+        self.input_character = qtw.QLineEdit()
+        self.input_character.setMaxLength(self.MAX_LEN_CHARACTER_LINE_EDIT)
+        self.input_character.setStyleSheet("font-size: %spx" %(self.QLINEEDIT_FONT_SIZE))
+        self.input_character.textChanged.connect(self._next_move)
+
         _layout_buttons.addWidget(self._attends)
         _layout_buttons.addWidget(self._qlable_used_letters)
+        _layout_buttons.addWidget(self.ql_input)
+        _layout_buttons.addWidget(self.input_character)
         _layout_buttons.addWidget(restart_button)
         _layout_buttons.addWidget(end_button)
 
@@ -103,8 +119,7 @@ class Hangman_ui(qtw.QWidget):
                         oWidget = self._letter_layout.itemAt(idx).widget()
                         oWidget.setText(text)
                         self.dict_status = self._model.get_gamestatus()
-                        oWidget.setEnabled(False)
-                        print(self.dict_status)  
+                        oWidget.setEnabled(False)  
         else:
             if(text != ""):
                 self._model.next_move(text)
@@ -113,6 +128,7 @@ class Hangman_ui(qtw.QWidget):
                 self._main_label2draw.setPixmap(update_art)
                 self._attends.setText("Attempts: %s" %("*"*self.dict_status["lifes"]))
         self._qlable_used_letters.setText("Used Letters: %s" %(str(self._model.get_used_letters())))
+        self.input_character.clear()
         self.ui_verification()
 
     def clearLayout(self, layout):
@@ -125,8 +141,9 @@ class Hangman_ui(qtw.QWidget):
         for idx in range(len(text)):
             _tmp_e_line = Hm_qeditline()
             _tmp_e_line.set_id_pos(idx)
-            _tmp_e_line.setMaxLength(self.MAX_LEN_CHARACTER_LINE_EDIT)
-            _tmp_e_line.textChanged.connect(self._next_move)
+            _tmp_e_line.setStyleSheet("background-color: white; font-size: %spx;" %(self.QLABEL_FONT_SIZE))
+            #_tmp_e_line.setMaxLength(self.MAX_LEN_CHARACTER_LINE_EDIT)
+            #_tmp_e_line.textChanged.connect(self._next_move)
             layout.addWidget(_tmp_e_line)
 
     def ui_verification(self):
