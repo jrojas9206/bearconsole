@@ -17,6 +17,7 @@
         <file>icon/bear_win_icon.png</file>
         <file>console/bear_main_logo.png</file>
         <file>console/game_logo.png</file>
+        <file>console/warning.jpg</file>
     </qresource>
     <qresource prefix="paper_games_icon">
         <file>icon/tictactoe.png</file>

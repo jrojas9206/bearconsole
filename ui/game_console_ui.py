@@ -143,11 +143,21 @@ class GameConsole(qtw.QMainWindow):
             games = self._games2load["paperGames"]
         elif self.isMobile and not self.isPaper:
             games = self._games2load["mobileGames"]
+        elif not self.isMobile and not self.isPaper:
+            games = []
         else:
             raise ValueError("Unknow option, verify menu configuration")
         
         if(button_id+1 <= len(games)):
             games[button_id].show_game()
+        else:
+            image_warning = qtg.QPixmap(":main_window/console/warning.jpg")
+            messageBox = qtw.QMessageBox()
+            messageBox.setIconPixmap(image_warning)
+            messageBox.setText("No game available!")
+            messageBox.setWindowTitle("Bear Station: Warning!")
+            messageBox.setWindowIcon(qtg.QIcon(qtg.QPixmap(self.WINDOW_LOGO)))
+            messageBox.exec()
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
