@@ -16,12 +16,18 @@ from ui.game_console_ui import GameConsole
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
 
+    ttt_model = TicTacToe()
+    ttt_ui = Tictactoe_ui(ttt_model)
+    hm = Hangman()
+    Hm_ui = Hangman_ui(hm)
+
+    gamesDict = {"paperGames":[ttt_ui, Hm_ui], "mobileGames":[]}
+
     #ttt_model = TicTacToe()
     #mw = Tictactoe_ui(ttt_model)
-    
     #hm = Hangman()
     #Hm_ui = Hangman_ui(hm)
 
-    mw = GameConsole()
+    mw = GameConsole(gamesDict)
 
     sys.exit(app.exec())

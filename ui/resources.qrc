@@ -18,4 +18,9 @@
         <file>console/bear_main_logo.png</file>
         <file>console/game_logo.png</file>
     </qresource>
+    <qresource prefix="paper_games_icon">
+        <file>icon/tictactoe.png</file>
+        <file>icon/hangman_icon.jpg</file>
+        <file>icon/dot_and_boxes_icon.png</file>
+    </qresource>
 </RCC>

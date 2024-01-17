@@ -30,6 +30,7 @@ class Hangman_ui(qtw.QWidget):
     QLABEL_FONT_SIZE = 32
     QPUSHBUTTON_FONT_SIZE = 32
     QLINEEDIT_FONT_SIZE = 32
+    GAME_ICON_PIXMAP = ":paper_games_icon/icon/hangman_icon.jpg"
 
     def __init__(self, gameModel = None):
         super().__init__()
@@ -84,8 +85,6 @@ class Hangman_ui(qtw.QWidget):
         _layout_buttons.addWidget(self.input_character)
         _layout_buttons.addWidget(restart_button)
         _layout_buttons.addWidget(end_button)
-
-        self.show()
 
     def _close_widget(self):
         self.close()
@@ -160,3 +159,9 @@ class Hangman_ui(qtw.QWidget):
                 self._model.restart()
                 self._init_game_param()
                 self._restart()
+
+    def show_game(self):
+        self.show()
+
+    def get_game_icon(self):
+        return qtg.QIcon(qtg.QPixmap(self.GAME_ICON_PIXMAP))

@@ -10,6 +10,7 @@ except ModuleNotFoundError:
     import ui.resources
 
 class PushButton_xo(qtw.QPushButton):
+
     def __init__(self):
         super().__init__()
         self._user = "crosss" 
@@ -46,6 +47,8 @@ class PushButton_xo(qtw.QPushButton):
 
 class Tictactoe_ui(qtw.QWidget):
 
+    GAME_ICON_PIXMAP = ":paper_games_icon/icon/tictactoe.png"
+
     def __init__(self, gameModel=None):
         """MainWindow constructor.
 
@@ -74,8 +77,6 @@ class Tictactoe_ui(qtw.QWidget):
                 button_xo.setMinimumWidth(100)
                 button_xo.setMinimumHeight(100)
                 board_layout.layout().addWidget(button_xo, a_row, a_column)
-
-        self.show()
 
     def on_click(self):
         sender = self.sender()
@@ -106,9 +107,8 @@ class Tictactoe_ui(qtw.QWidget):
                 qtw.QMessageBox.warning(self, "Tictactoe", "There is no winners this time! play again!!") 
                 self.close()
 
-if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
-    # it's required to save a reference to MainWindow.
-    # if it goes out of scope, it will be destroyed.
-    mw = Tictactoe_ui()
-    sys.exit(app.exec())
+    def get_game_icon(self):
+        return qtg.QIcon(qtg.QPixmap(self.GAME_ICON_PIXMAP))
+
+    def show_game(self):
+        self.show()
