@@ -1,10 +1,88 @@
+import math 
+import numpy as np 
+
 class DotAndBoxes:
 
     GAME_NAME="Dot and boxes"
 
-    def __init__(self) -> None:
-        self._round 
-        self._active_player
+    def __init__(self, board_size:list=[9,9]) -> None:
+        self._round = 0 
+        self._active_player = 0
+        self._board_size = [(2*i) for i in board_size] 
+        self._requirements = {
+            "nplayers": 2,
+            "player_input": [int, int],
+            "player_board_reference": ["point_init", "point_end"],
+            "playerReference":"symbole",
+            "range":[[self._board_size[0], self._board_size[1]], [self._board_size[0], self._board_size[1]]],
+            "initLogo": ["o", "o-", "o-o", "(*-*)", "(*-*)/"]
+        }
+        self._fixed_point = self._requirements["nplayers"]+1 # Point that the user can select and connect
+        self._connection_point = self._requirements["nplayers"]+2 # connection path that will change when the user conect two points
+        self._board = np.zeros(self._board_size, dtype=np.int8)+self._connection_point
+
+    def _init_board(self):
+        self._board = np.zeros(self._board_size, dtype=np.int8)+self._connection_point
+        for row in range(1, self._board_size[0]):
+            if row == 1:
+                self.set_board_axis(1)
+                self.set_board_axis(0)
+            for column in range(1, self._board_size[1]):
+                if row%2 != 0 and column%2!=0:
+                    self._board[row, column] = self._fixed_point
+
+    def set_board_axis(self, axis:int) -> None:
+        cntr = 1
+        for idx in range(self._board_size[axis]):
+            if idx % 2 != 0:
+                self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = cntr
+                cntr += 1
+            else:
+                self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = 0
+
+    def next_move(self, row:[int, int], column:[int, int]):
+        # Real posicion in the array of used as board 
+        p1_x, p1_y = (row[0]*2)-1, (column[0]*2)-1
+        p2_x, p2_y = (row[1]*2)-1, (column[1]*2)-1
+        distance = math.sqrt( ((p2_x-p1_x)**2) + ((p2_y-p1_y)**2) )   
+        print(len(set(row)),  len(set(column)), distance)
+        if (len(set(row)) == 2 and len(set(column))==2) or distance>2:
+            raise ValueError("Unexpected move: You can do only linear movements, and with a distance lower than 1")
+        if (p1_x>self._board.shape[0] or p2_x>self._board.shape[0] or
+            p1_y>self._board.shape[1] or p2_y>self._board.shape[1]):
+            raise Warning("Movement outside of the board")
+
+        coordinate2draw = lambda pi, pe: (pi+pe)-1
+
+        if p1_x == p2_x and p1_y != p2_y:
+            self._board[p1_x, coordinate2draw(column[0], column[1])] = self.get_player()+1
+        elif p1_x != p2_x and p1_y == p2_y:
+            self._board[coordinate2draw(row[0], row[1]), p1_y,] = self.get_player()+1
+
+        self._round += 1
+
+    def verify_status(self):
+        pass
+
+    def start(self):
+        self._round = 0
+        self._active_player = 0
+        self._init_board()
+
+    def get_requirements(self):
+        return self._requirements
 
     def get_name(self) -> str:
         return self.GAME_NAME
+    
+    def get_player(self):
+        return 0 if self._round%2 == 0 else 1
+    
+    def get_board(self):
+        return self._board
+    
+if __name__ == "__main__":
+    dab = DotAndBoxes()
+    dab.start()
+    dab.next_move([5,5], [8,9])
+    print(dab.get_board())
