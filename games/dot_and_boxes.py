@@ -8,6 +8,7 @@ class DotAndBoxes:
     def __init__(self, board_size:list=[9,9]) -> None:
         self._round = 0 
         self._active_player = 0
+        self._taked_coord = []
         self._board_size = [(2*i) for i in board_size] 
         self._requirements = {
             "nplayers": 2,
@@ -18,7 +19,7 @@ class DotAndBoxes:
             "initLogo": ["o", "o-", "o-o", "(*-*)", "(*-*)/"]
         }
         self._fixed_point = self._requirements["nplayers"]+1 # Point that the user can select and connect
-        self._connection_point = self._requirements["nplayers"]+2 # connection path that will change when the user conect two points
+        self._connection_point = self._requirements["nplayers"]+2 # connection path that will change when the user connect two points
         self._board = np.zeros(self._board_size, dtype=np.int8)+self._connection_point
 
     def _init_board(self):
@@ -58,15 +59,27 @@ class DotAndBoxes:
             self._board[p1_x, coordinate2draw(column[0], column[1])] = self.get_player()+1
         elif p1_x != p2_x and p1_y == p2_y:
             self._board[coordinate2draw(row[0], row[1]), p1_y,] = self.get_player()+1
-
+        self.verify_status()
         self._round += 1
 
     def verify_status(self):
-        pass
+        init_coord = [2,2]
+        end_coord = [self._board_size[0]-2, self._board_size[1]-2]
+
+        for center_row_idx in range(init_coord[0], end_coord[0], 2):
+            for center_column_idx in range(init_coord[1], end_coord[1], 2):
+                cntr = 0
+                for idx, _ in enumerate([1, -1, 1, -1]): 
+                    if self._board[center_row_idx-1 if idx <=1 else center_row_idx, 
+                                   center_column_idx if idx <=1 else center_column_idx-1] != self._connection_point:
+                        cntr += 1
+                if cntr == 4:
+                    self._taked_coord.append({"player":self.get_player(), "coordinate":[center_row_idx, center_column_idx]})
 
     def start(self):
         self._round = 0
         self._active_player = 0
+        self._taked_coord = []
         self._init_board()
 
     def get_requirements(self):
