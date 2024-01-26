@@ -6,12 +6,14 @@ class DotAndBoxes:
 
     GAME_NAME="Dot and boxes"
 
-    def __init__(self, board_size:list=[9,9]) -> None:
+    def __init__(self, board_size:list=[9,9], player_1:str="X", player_2:str="O") -> None:
         self._round = 0 
         self._active_player = 0
         self._taked_coord = []
         self._end = False,
         self._move_symbol = {}
+        self._player_1 = player_1
+        self._player_2 = player_2
         self._game_status_ = {
                    "winner":-1,
                    "allLose": False,
@@ -61,7 +63,7 @@ class DotAndBoxes:
                 self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = cntr
                 cntr += 1
             else:
-                self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = 0
+                self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = self._connection_point
 
     def next_move(self, row:list, column:list):
         # Real posicion in the array of used as board 
@@ -77,29 +79,34 @@ class DotAndBoxes:
         coordinate2draw = lambda pi, pe: (pi+pe)-1
 
         if p1_x == p2_x and p1_y != p2_y:
-            self._board[p1_x, coordinate2draw(column[0], column[1])] = self.get_player()+1
+            self._board[p1_x, coordinate2draw(column[0], column[1])] = self.get_player()
             self._move_symbol["%i_%i"%(p1_x, coordinate2draw(column[0], column[1]))] = "-"
         elif p1_x != p2_x and p1_y == p2_y:
-            self._board[coordinate2draw(row[0], row[1]), p1_y,] = self.get_player()+1
+            self._board[coordinate2draw(row[0], row[1]), p1_y,] = self.get_player()
             self._move_symbol["%i_%i"%(coordinate2draw(row[0], row[1]), p2_y)] = "|"
         self.verify_status()
         self._round += 1
 
     def verify_status(self):
         init_coord = [2,2]
-        end_coord = [self._board_size[0]-2, self._board_size[1]-2]
+        end_coord = [self._board_size[0]-1, self._board_size[1]-1]
 
         for center_row_idx in range(init_coord[0], end_coord[0], 2):
             for center_column_idx in range(init_coord[1], end_coord[1], 2):
                 cntr = 0
                 for idx, _ in enumerate([1, -1, 1, -1]): 
-                    if self._board[center_row_idx-1 if idx <=1 else center_row_idx, 
-                                   center_column_idx if idx <=1 else center_column_idx-1] != self._connection_point:
+                    # if self._board[center_row_idx-1 if idx <=1 else center_row_idx, 
+                    #                center_column_idx if idx <=1 else center_column_idx-1] != self._connection_point:
+                    if (self._board[center_row_idx, center_column_idx-1] != self._connection_point and
+                        self._board[center_row_idx, center_column_idx+1] != self._connection_point and
+                        self._board[center_row_idx+1, center_column_idx] != self._connection_point and
+                        self._board[center_row_idx-1, center_column_idx] != self._connection_point):
                         cntr += 1
                 if cntr == 4:
                     self._taked_coord.append({"player":self.get_player(), 
                                               "coordinate":[center_row_idx, center_column_idx]})
                     self._board[center_row_idx, center_column_idx] = self.get_player()
+                    cntr = 0
 
         if  len(self._taked_coord) >= self._box2finish:
             self._end = True
@@ -154,30 +161,39 @@ class DotAndBoxes:
 
     def draw_board(self):
         self._draw_board = []
+        print(self._board)
         for idx0, a_row in enumerate(self._board):
             _tmp = []
             if idx0 == 0:
-                _tmp = [" " if i == 0 else str(i) for i in a_row]
+                _tmp = [" " if i == 0 else ('-' if  i == self._connection_point and iidx%2 == 0 else str(i)) for iidx, i in enumerate(a_row)]
             else:
                 for idx1, a_col in enumerate(a_row):
                     if  idx1 == 0:
-                        _tmp.append( "|" if a_col == 0 else str(a_col) )
+                        _tmp.append( "|" if a_col == self._connection_point and idx0%2==0 else str(a_col) )
                         continue
                     if a_col == self._fixed_point:
                         _tmp.append("o")
                     elif a_col == self._connection_point:
                         _tmp.append(" ")
-                    elif a_col in range(1, self._requirements["nplayers"]+1):
+                    elif a_col in range(0, self._requirements["nplayers"]):
                         e2search = "%i_%i" %(idx0, idx1)
-                        _tmp.append(self._move_symbol[e2search])
+                        if e2search in self._move_symbol.keys():
+                            _tmp.append(self._move_symbol[e2search])
+                        else:
+                            statTaken = self.is_taken([idx0, idx1])
+                            if statTaken[0]:
+                                _tmp.append(self._player_1 if statTaken[1]==0 else self._player_2)
                     else:
-                        print(a_col)
+                        print("There is unknown value in the board, report the bug", idx0, idx1, a_col)
+
             self._draw_board.append(_tmp) 
 
     def display_board(self):
         self.draw_board()
+        str2plot = ""
         for a_row in self._draw_board:
-            print(a_row)
+            str2plot += "%s\n" %(" ".join(a_row))
+        print(str2plot)
 
     def get_board(self):
         return self._board
