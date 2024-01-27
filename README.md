@@ -8,6 +8,7 @@ Currently, the platform offers the following games:
 
  - TicTacToe [31/12/2023]
  - Hangman [06/01/2023]
+ - DotAndBoxes [27/01/2024]
 
 ## Installation 
 
