@@ -100,7 +100,7 @@ class DotAndBoxes:
         init_coord = [2,2]
         end_coord = [self._board_size[0]-1, self._board_size[1]-1]
         cntr = 0
-        _input_round = self.get_round()
+        _input_round = self.get_actual_round_id()
         _input_player = self.get_player()
         for idx, center_row_idx in enumerate(range(init_coord[0], end_coord[0], 2)):
             for center_column_idx in range(init_coord[1], end_coord[1], 2):
@@ -114,7 +114,7 @@ class DotAndBoxes:
                                             "coordinate":[center_row_idx, center_column_idx],
                                             "round": _input_round})
                     self._board[center_row_idx, center_column_idx] = _input_player
-                    if _input_round == self.get_round():
+                    if _input_round == self.get_actual_round_id():
                         self._round-=1
                 cntr = 0
 
@@ -124,12 +124,12 @@ class DotAndBoxes:
         self._game_status_ = {
                    "winner": self.actual_winner() if self._end else -1,
                    "allLose": self._end,
-                   'round': self.get_round(),
+                   'round': self.get_actual_round_id(),
                    "art_id": None,
                    "boxes": self._taked_coord,
                    }
 
-    def get_round(self):
+    def get_actual_round_id(self):
         return self._round
 
     def actual_winner(self):
@@ -203,7 +203,7 @@ class DotAndBoxes:
         for a_row in self._draw_board:
             str2plot += "%s\n" %(" ".join(a_row))
         print(str2plot)
-        print("####### ROUND:%s ########" %(self.get_round()))
+        print("####### ROUND:%s ########" %(self.get_actual_round_id()))
         print("Player: %i | Symbol: %s" %(self.get_player()+1, self.get_symbol()))
         print("########################")
 
@@ -211,7 +211,8 @@ class DotAndBoxes:
         return self._player_1 if self.get_player() == 0 else self._player_2
 
     def get_board(self):
-        return self._board
+        self.draw_board()
+        return self._draw_board
     
 def simple_menu():
     dab = DotAndBoxes([5,5])
