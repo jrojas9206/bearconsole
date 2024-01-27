@@ -14,6 +14,7 @@ class DotAndBoxes:
         self._move_symbol = {}
         self._player_1 = player_1
         self._player_2 = player_2
+        self._next_round = True
         self._game_status_ = {
                    "winner":-1,
                    "allLose": False,
@@ -75,38 +76,47 @@ class DotAndBoxes:
         if (p1_x>self._board.shape[0] or p2_x>self._board.shape[0] or
             p1_y>self._board.shape[1] or p2_y>self._board.shape[1]):
             raise Warning("Movement outside of the board")
-
         coordinate2draw = lambda pi, pe: (pi+pe)-1
-
         if p1_x == p2_x and p1_y != p2_y:
             self._board[p1_x, coordinate2draw(column[0], column[1])] = self.get_player()
             self._move_symbol["%i_%i"%(p1_x, coordinate2draw(column[0], column[1]))] = "-"
         elif p1_x != p2_x and p1_y == p2_y:
             self._board[coordinate2draw(row[0], row[1]), p1_y,] = self.get_player()
             self._move_symbol["%i_%i"%(coordinate2draw(row[0], row[1]), p2_y)] = "|"
+        # The verification of the taken box and the verification of next round is done in 
+        # verify_statys()
         self.verify_status()
         self._round += 1
+
+    def taked_box_rounds_list(self) -> list:
+        lst2ret = []
+        if  len(self._taked_coord)>0:
+            for a_take in self._taked_coord:
+                lst2ret.append(a_take["round"])
+            return lst2ret
+        return []
 
     def verify_status(self):
         init_coord = [2,2]
         end_coord = [self._board_size[0]-1, self._board_size[1]-1]
-
-        for center_row_idx in range(init_coord[0], end_coord[0], 2):
+        cntr = 0
+        _input_round = self.get_round()
+        _input_player = self.get_player()
+        for idx, center_row_idx in enumerate(range(init_coord[0], end_coord[0], 2)):
             for center_column_idx in range(init_coord[1], end_coord[1], 2):
+                if (self._board[center_row_idx, center_column_idx-1] != self._connection_point and
+                    self._board[center_row_idx, center_column_idx+1] != self._connection_point and
+                    self._board[center_row_idx+1, center_column_idx] != self._connection_point and
+                    self._board[center_row_idx-1, center_column_idx] != self._connection_point):
+                    cntr += 4
+                if cntr == 4 and not self.is_taken([center_row_idx, center_column_idx])[0]:
+                    self._taked_coord.append({"player":_input_player, 
+                                            "coordinate":[center_row_idx, center_column_idx],
+                                            "round": _input_round})
+                    self._board[center_row_idx, center_column_idx] = _input_player
+                    if _input_round == self.get_round():
+                        self._round-=1
                 cntr = 0
-                for idx, _ in enumerate([1, -1, 1, -1]): 
-                    # if self._board[center_row_idx-1 if idx <=1 else center_row_idx, 
-                    #                center_column_idx if idx <=1 else center_column_idx-1] != self._connection_point:
-                    if (self._board[center_row_idx, center_column_idx-1] != self._connection_point and
-                        self._board[center_row_idx, center_column_idx+1] != self._connection_point and
-                        self._board[center_row_idx+1, center_column_idx] != self._connection_point and
-                        self._board[center_row_idx-1, center_column_idx] != self._connection_point):
-                        cntr += 1
-                if cntr == 4:
-                    self._taked_coord.append({"player":self.get_player(), 
-                                              "coordinate":[center_row_idx, center_column_idx]})
-                    self._board[center_row_idx, center_column_idx] = self.get_player()
-                    cntr = 0
 
         if  len(self._taked_coord) >= self._box2finish:
             self._end = True
@@ -161,7 +171,6 @@ class DotAndBoxes:
 
     def draw_board(self):
         self._draw_board = []
-        print(self._board)
         for idx0, a_row in enumerate(self._board):
             _tmp = []
             if idx0 == 0:
@@ -194,6 +203,12 @@ class DotAndBoxes:
         for a_row in self._draw_board:
             str2plot += "%s\n" %(" ".join(a_row))
         print(str2plot)
+        print("####### ROUND:%s ########" %(self.get_round()))
+        print("Player: %i | Symbol: %s" %(self.get_player()+1, self.get_symbol()))
+        print("########################")
+
+    def get_symbol(self):
+        return self._player_1 if self.get_player() == 0 else self._player_2
 
     def get_board(self):
         return self._board
@@ -201,8 +216,7 @@ class DotAndBoxes:
 def simple_menu():
     dab = DotAndBoxes([5,5])
     dab.start()
-    for i in range(25):
-        print("-----%i-----" %(i))
+    for _ in range(25):
         dab.display_board()
         i_coord = input("Introduce your coordinates in the format x1,y1,x2,y2: \n")
         if "q" in i_coord:
