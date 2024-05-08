@@ -2,4 +2,5 @@
 *.jpg
 *.pyc
 *.svg
+*.sda
 .vscode/
