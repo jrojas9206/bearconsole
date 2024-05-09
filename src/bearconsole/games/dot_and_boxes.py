@@ -4,7 +4,12 @@ import numpy as np
 
 class DotAndBoxes:
 
+    """
+        Game logic of the Dot and Boxes Game
+    """
+
     GAME_NAME="Dot and boxes"
+    VERSION = "0.0.1"
 
     def __init__(self, board_size:list=[9,9], player_1:str="X", player_2:str="O") -> None:
         self._round = 0 
@@ -37,7 +42,10 @@ class DotAndBoxes:
         self._board = np.zeros(self._board_size, dtype=np.int8)+self._connection_point
         self._draw_board = []
 
-    def _init_board(self):
+    def _init_board(self) -> None:
+        """
+            Initialize all the game variables
+        """
         self._board = np.zeros(self._board_size, dtype=np.int8)+self._connection_point
         self._game_status_ = {
                    "winner":-1,
@@ -58,6 +66,9 @@ class DotAndBoxes:
         self.draw_board()
 
     def set_board_axis(self, axis:int) -> None:
+        """
+            Add the column and row that represent the game axis 
+        """
         cntr = 1
         for idx in range(self._board_size[axis]):
             if idx % 2 != 0:
@@ -66,7 +77,10 @@ class DotAndBoxes:
             else:
                 self._board[0 if axis==1 else idx, 0 if axis==0 else idx] = self._connection_point
 
-    def next_move(self, row:list, column:list):
+    def next_move(self, row:list, column:list) -> None:
+        """
+            Update the game variables based on the user input
+        """
         # Real posicion in the array of used as board 
         p1_x, p1_y = (row[0]*2)-1, (column[0]*2)-1
         p2_x, p2_y = (row[1]*2)-1, (column[1]*2)-1
@@ -89,6 +103,9 @@ class DotAndBoxes:
         self._round += 1
 
     def taked_box_rounds_list(self) -> list:
+        """
+            Update the list of taken coordinates 
+        """
         lst2ret = []
         if  len(self._taked_coord)>0:
             for a_take in self._taked_coord:
@@ -96,7 +113,10 @@ class DotAndBoxes:
             return lst2ret
         return []
 
-    def verify_status(self):
+    def verify_status(self) -> None:
+        """
+            Verify the board the define the game status 
+        """
         init_coord = [2,2]
         end_coord = [self._board_size[0]-1, self._board_size[1]-1]
         cntr = 0
@@ -129,10 +149,17 @@ class DotAndBoxes:
                    "boxes": self._taked_coord,
                    }
 
-    def get_actual_round_id(self):
+    def get_actual_round_id(self) -> int:
+        """
+            Return the actual round of the game
+        :return: int
+        """
         return self._round
 
-    def actual_winner(self):
+    def actual_winner(self) -> int:
+        """
+            Return the winner of the game in the actual round 
+        """
         players = {player:0 for player in range(self._requirements["nplayers"])}
         for a_box in self._taked_coord:
             for a_player in players.keys():
@@ -147,29 +174,57 @@ class DotAndBoxes:
         return winner
 
 
-    def start(self):
+    def start(self) -> None:
+        """
+            Restart all the game variables 
+        """
         self._round = 0
         self._active_player = 0
         self._taked_coord = []
         self._init_board()
 
-    def get_requirements(self):
+    def get_requirements(self) ->dict:
+        """
+            Return the dict that contain the minimum info 
+            to start the game 
+
+            :return: dict 
+        """
         return self._requirements
 
     def get_name(self) -> str:
+        """
+            Return the game name
+
+            :return: str
+        """
         return self.GAME_NAME
     
-    def get_player(self):
+    def get_player(self) -> int:
+        """
+            Return the Id of the player that have to play
+
+            :return: int
+        """
         return 0 if self._round%2 == 0 else 1
     
-    def is_taken(self, coord:list) -> [bool, int]:
+    def is_taken(self, coord:list) -> list[bool, int]:
+        """
+            Verify what coordinate have been already taken 
+            :return: List[bool, int] -> List[isTaken, PlayerId]
+        """
         for a_taken in self._taked_coord:
             a_coord = a_taken["coordinate"]
             if sum([1 if a==b else 0 for a,b in zip(a_coord, coord)])==2:
                 return [True, a_taken["player"]]
         return [False, -1]
 
-    def draw_board(self):
+    def draw_board(self) -> None:
+        """
+            Render the game board based on the player moves
+
+            The inital draw is a list[list,...]
+        """
         self._draw_board = []
         for idx0, a_row in enumerate(self._board):
             _tmp = []
@@ -197,7 +252,12 @@ class DotAndBoxes:
 
             self._draw_board.append(_tmp) 
 
-    def display_board(self):
+    def display_board(self) -> str:
+        """
+            Print the game board 
+
+            :return: str
+        """
         self.draw_board()
         str2plot = ""
         for a_row in self._draw_board:
@@ -207,25 +267,17 @@ class DotAndBoxes:
         print("Player: %i | Symbol: %s" %(self.get_player()+1, self.get_symbol()))
         print("########################")
 
-    def get_symbol(self):
+    def get_symbol(self) -> str:
+        """
+            Return the character that represent each player
+            :return: str
+        """
         return self._player_1 if self.get_player() == 0 else self._player_2
 
-    def get_board(self):
+    def get_board(self) ->list[list,list]:
+        """
+            Return the list of lists that represent the game's board 
+            :return: list[list, list, ...]
+        """
         self.draw_board()
         return self._draw_board
-    
-def simple_menu():
-    dab = DotAndBoxes([5,5])
-    dab.start()
-    for _ in range(25):
-        dab.display_board()
-        i_coord = input("Introduce your coordinates in the format x1,y1,x2,y2: \n")
-        if "q" in i_coord:
-            sys.exit()
-        x1, y1, x2, y2 = i_coord.split(',')
-        dab.next_move([int(x1), int(x2)], [int(y1),int(y2)])
-        
-
-
-if __name__ == "__main__":
-    simple_menu()

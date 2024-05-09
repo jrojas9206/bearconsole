@@ -7,18 +7,14 @@ Author: Juan Pablo ROJAS
 Requirements: PyQt5
 """
 from random import randrange
-try:
-    from extras import hangman_art
-    from extras import hangman_dictionary
-except ModuleNotFoundError:
-    from games.extras import hangman_art
-    from games.extras import hangman_dictionary
+from bearconsole.games.tanimation.extras import hangman_art
+from bearconsole.games.tanimation.extras import hangman_dictionary
 
 class Hangman:
     GAME_NAME = "Hangman"
     VERSION = "0.0.1"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._board = []
         self._word2catch = ""
         self._board_size = []
@@ -34,7 +30,12 @@ class Hangman:
         self._win = False
         self._end = False
 
-    def get_requirements(self):
+    def get_requirements(self) -> dict:
+        """
+            Return a dict with the minimum elements
+            to start the game 
+            :return: dict
+        """
         return {
             "nplayers": 1,
             "player_input": [str],
@@ -104,7 +105,7 @@ class Hangman:
                    "catched_letters": self._catched_letters,
                    }
     
-    def verify_status(self):
+    def verify_status(self) -> None:
         """
             Verify if there is a winer or if the game need to finish 
         """
@@ -116,11 +117,16 @@ class Hangman:
             self._win = False
 
     def get_gamestatus(self) -> dict:
+        """
+            Return the game resume in the actual round
+            :return dict:
+        """
         return self._game_status_
 
-    def get_board(self):
+    def get_board(self) -> list[str,str]:
         """
-            Return the board of the game 
+            Return the list that represent the board of the game 
+            :return: list[str, str, ...]
         """
         a_art = hangman_art[self.hagman_art_id]
         a_art = a_art.split("\n")
@@ -135,15 +141,24 @@ class Hangman:
         tmp.append(["#"*(len(self._word2catch)+2)])
         return tmp
 
-    def get_word2catch(self):
+    def get_word2catch(self) -> str:
+        """
+            Return the word to catch in the actual game
+            :return: str
+        """
         return "".join(self._word2catch)
 
-    def get_name(self):
+    def get_name(self) -> str:
+        """
+            Return the game name
+            :return: str
+        """
         return self.GAME_NAME
     
     def get_player(self) -> int:
         """
             This Hangman is a game for 1 player 
+            :return: int
         """
         return 0
 
@@ -161,11 +176,15 @@ class Hangman:
         """
         return self.VERSION
 
-    def get_used_letters(self):
+    def get_used_letters(self) -> str:
+        """
+            Retrun the string with the used letters
+            :return: str
+        """
         return "[%s]"%("-".join(list(set(self._used_letters))))
 
     def restart(self) -> None:
         """
-            Set the board to their initial parameters
+            Restart the game parameters
         """
         self.start()
