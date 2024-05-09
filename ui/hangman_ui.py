@@ -16,6 +16,9 @@ class Hm_qeditline(qtw.QLabel):
         return self._id_pos
 
 class Hangman_ui(qtw.QWidget):
+    """
+        Widget of the hangman game 
+    """
     # Errors that the user can have 
     # based on the created art 
     HANGMAN_ART_ATTENDS = 7
@@ -25,7 +28,7 @@ class Hangman_ui(qtw.QWidget):
     QLINEEDIT_FONT_SIZE = 32
     GAME_ICON_PIXMAP = ":paper_games_icon/icon/hangman_icon.jpg"
 
-    def __init__(self, gameModel = None):
+    def __init__(self, gameModel:object = None) -> None:
         super().__init__()
         self.setWindowTitle(gameModel.get_name())
         self._model = gameModel
@@ -79,10 +82,10 @@ class Hangman_ui(qtw.QWidget):
         _layout_buttons.addWidget(restart_button)
         _layout_buttons.addWidget(end_button)
 
-    def _close_widget(self):
+    def _close_widget(self) -> None:
         self.close()
 
-    def _restart(self):
+    def _restart(self) -> None:
         self._main_label2draw.setPixmap(self._init_hangman_art)
         self._model.restart()
         self._init_game_param()
@@ -96,7 +99,7 @@ class Hangman_ui(qtw.QWidget):
         self._model.start()
         self._word2catch = self._model.get_word2catch()
 
-    def _next_move(self, text):
+    def _next_move(self, text) -> None:
         sender = self.sender()
         nWidget = self._letter_layout.count()
         lck = False
@@ -123,13 +126,13 @@ class Hangman_ui(qtw.QWidget):
         self.input_character.clear()
         self.ui_verification()
 
-    def clearLayout(self, layout):
+    def clearLayout(self, layout) -> None:
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()    
     
-    def fill_layout(self, layout, text):
+    def fill_layout(self, layout, text) -> None:
         for idx in range(len(text)):
             _tmp_e_line = Hm_qeditline()
             _tmp_e_line.set_id_pos(idx)
@@ -138,7 +141,7 @@ class Hangman_ui(qtw.QWidget):
             #_tmp_e_line.textChanged.connect(self._next_move)
             layout.addWidget(_tmp_e_line)
 
-    def ui_verification(self):
+    def ui_verification(self) -> None:
         if self.dict_status:
             if self.dict_status['allLose'] or self.dict_status['lifes']==0:
                 qtw.QMessageBox.warning(self,"Hangman", "You have lost!! Try again!")
@@ -153,8 +156,8 @@ class Hangman_ui(qtw.QWidget):
                 self._init_game_param()
                 self._restart()
 
-    def show_game(self):
+    def show_game(self) -> None:
         self.show()
 
-    def get_game_icon(self):
+    def get_game_icon(self) -> None:
         return qtg.QIcon(qtg.QPixmap(self.GAME_ICON_PIXMAP))
