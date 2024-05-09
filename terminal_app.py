@@ -6,11 +6,11 @@ Author: Juan Pablo ROJAS
 Requirements: PyQt5
 """
 import sys 
-from games.tictactoe import TicTacToe
-from games.hangman import Hangman
-from games.dot_and_boxes import DotAndBoxes
-from board.board_generic import Board
-from menu.generic_menu import Menu
+from bearconsole.games.tictactoe import TicTacToe
+from bearconsole.games.hangman import Hangman
+from bearconsole.games.dot_and_boxes import DotAndBoxes
+from bearconsole.board.board_generic import Board
+from bearconsole.menu.generic_menu import Menu
 
 def test_winner_player2():
     ttt = TicTacToe()

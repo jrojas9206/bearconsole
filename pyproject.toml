@@ -6,13 +6,21 @@ build-backend = "setuptools.build_meta"
 name = "bearconsole"
 version = "0.0.1"
 description = "Implementation of few paper-games and some old mobile-games"
+dependencies = [
+  "PyQt5",
+  "pytest",
+  "numpy",
+  "pylint",
+  "mypy",
+]
+
 authors = [
   {name = "Juan Pablo Rojas Bustos", email = "jrojas9206@gmail.com"},
 ]
 maintainers = [
   {name = "Juan Pablo Rojas Bustos", email = "jrojas9206@gmail.com"}
 ]
-readme = {file = "README.txt", content-type = "text/markdown"}
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 keywords = ["mobile games", "paper games", "snake", "hangman", "dot and boxes", "tic tac toe"]
 
@@ -34,5 +42,5 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
 ]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+# [tool.setuptools.dynamic]
+# dependencies = {file = ["./requirements.txt"]} 
