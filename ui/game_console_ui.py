@@ -5,6 +5,9 @@ from PyQt5 import QtCore as qtc
 from bearconsole.resources import resources
 
 class GamePushButton(qtw.QPushButton):
+    """
+        Personalized game button  
+    """
     def __init__(self):
         super().__init__()
         self.setMinimumSize(100, 100)
@@ -17,7 +20,10 @@ class GamePushButton(qtw.QPushButton):
         return self._id_button
 
 class GameConsole(qtw.QMainWindow):
-
+    """
+        Main UI of the game
+        it contains all the developed games and modules  
+    """
     MAIN_WINDOW_HEIGHT = 480
     MAIN_WINDOW_WIDTH = 720
     BACKGROUND_IMG = ":main_window/console/bear_main_logo.png"
@@ -25,7 +31,7 @@ class GameConsole(qtw.QMainWindow):
     QLABEL_TITLE_FONT = qtg.QFont("Helvetica [Cronyx]", 21)
     GAME_LOGO_PUSHBUTTON = ":main_window/console/game_logo.png"
 
-    def __init__(self, gamesDict:dict={}):
+    def __init__(self, gamesDict:dict={}) -> None:
         super().__init__()
         self._games2load = gamesDict
         self.isPaper = False
@@ -86,18 +92,18 @@ class GameConsole(qtw.QMainWindow):
         self._layout_games_pushbutton.addWidget(self._game_2)
         self.show()
 
-    def set_background_image(self, img_path):
+    def set_background_image(self, img_path:str) -> None:
         background_pixmap = qtg.QPixmap(img_path)
         background_pixmap.scaled(self.size(), qtc.Qt.IgnoreAspectRatio)
         mw_palette = qtg.QPalette()
         mw_palette.setBrush(mw_palette.Background, qtg.QBrush(background_pixmap))
         self.setPalette(mw_palette)
 
-    def set_window_icon(self):
+    def set_window_icon(self) -> None:
         icon = qtg.QPixmap(self.WINDOW_LOGO)
         self.setWindowIcon(qtg.QIcon(icon))
 
-    def paper_games(self):
+    def paper_games(self) -> None:
         self._qpush_button_phone.setStyleSheet("background-color: balck; color: white; font-size: 22px;")
         self._qpush_button_paper.setStyleSheet("background-color: gray; color: white; font-size: 22px;")
         self.isPaper = True
@@ -105,14 +111,14 @@ class GameConsole(qtw.QMainWindow):
         self._related_game_to_launch_buttons("paperGames")
                 
 
-    def mobile_games(self):
+    def mobile_games(self) -> None:
         self.isPaper = False
         self.isMobile = True
         self._qpush_button_phone.setStyleSheet("background-color: gray; color: white; font-size: 22px;")
         self._qpush_button_paper.setStyleSheet("background-color: black; color: white; font-size: 22px;")
         self._related_game_to_launch_buttons("mobileGames")
 
-    def _related_game_to_launch_buttons(self, gameRef:str):
+    def _related_game_to_launch_buttons(self, gameRef:str) -> None:
         if(len(self._games2load[gameRef])>0 and 
            len(self._games2load[gameRef])<self._layout_games_pushbutton.count()):
             for idx, a_widget in enumerate(self._games2load[gameRef]):
@@ -130,7 +136,7 @@ class GameConsole(qtw.QMainWindow):
                 widget.setIcon(qtg.QIcon(self._init_gamebutton_icon_pixmap))
                 widget.setIconSize(qtc.QSize(100, 100))
 
-    def launch_game(self):
+    def launch_game(self) -> None:
         sender = self.sender()
         button_id = sender.get_id_button()
 

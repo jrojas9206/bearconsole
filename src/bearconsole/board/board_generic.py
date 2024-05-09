@@ -1,25 +1,14 @@
-"""
-Generic terminal board 
-The model creates a string that represent 
-the board of the game and displayed
-
-Date: 231230
-Author: Juan Pablo ROJAS 
-Requirements: PyQt5
-"""
-import sys 
-
 class Board:
     """
-        Class to visualize in the terminal  
-        the different games    
+        Class to render in the terminal  
+        the games' boards     
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self._game_board_ = None
         self._board = ""
         self._igame = ""
 
-    def load_game(self, game):
+    def load_game(self, game:object) -> None:
         """
             Load the game object
 
@@ -30,21 +19,25 @@ class Board:
         self._get_board()
 
     def _get_board(self) -> None:
+        """
+            Get the list object that represents the game board to be rendered later in the terminal.
+        """
         self._game_board_ = self._igame.get_board()
 
-    def get_game_name(self):
+    def get_game_name(self) -> str:
         """
-            Get the name of the name that was loaded 
+            Get the name of the game that was loaded 
+            :return: str 
         """
         return self._igame.get_name() 
 
-    def get_game_status(self):
+    def get_game_status(self) -> dict:
         """
-            Get some information about the game status
+            Get a dict with the resume of the game
         """
         return self._igame.get_gamestatus()
 
-    def prepare_board(self):
+    def prepare_board(self) -> None:
         """
             Print the board in its actual state 
         """
@@ -53,7 +46,7 @@ class Board:
             a_board += "".join(a_row+["\n"])
         self._board_view = a_board
 
-    def who_have_to_play(self):
+    def who_have_to_play(self) -> None:
         """
             Print the player that the to move 
         """
@@ -63,14 +56,14 @@ It is your turn player: %s
                           """ %(self._igame.get_player()+1)
         print(display_player)
 
-    def get_who_plays_id(self):
+    def get_who_plays_id(self) -> int:
         """
             Get the ID of the player who have to play 
             :return: int, 
         """
         return self._igame.get_player() 
 
-    def next_move(self, row:int=None, column:str=""):
+    def next_move(self, row:int=None, column:str="") -> None:
         """
             Execute a move action for the actual round 
             :param row: int, Row in the board
@@ -85,7 +78,7 @@ It is your turn player: %s
         except Warning as w:
             print(w)
 
-    def get_game_requirements(self):
+    def get_game_requirements(self) -> dict:
         """
             return a dict that contain 
             the number of players, and the type of input
@@ -93,7 +86,10 @@ It is your turn player: %s
         """
         return self._igame.get_requiremets()
 
-    def display_board(self):
+    def display_board(self) -> None:
+        """
+            Render the actual board game and print it in the terminal
+        """
         status_msg = """##########################
 # ROUND: %s               #
 # Your turn player: %s    #

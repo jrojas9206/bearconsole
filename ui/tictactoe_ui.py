@@ -43,9 +43,13 @@ class PushButton_xo(qtw.QPushButton):
 
 class Tictactoe_ui(qtw.QWidget):
 
+    """
+        Widget of the Tic tac toe game 
+    """
+
     GAME_ICON_PIXMAP = ":paper_games_icon/icon/tictactoe.png"
 
-    def __init__(self, gameModel=None):
+    def __init__(self, gameModel=None) -> None:
         """MainWindow constructor.
 
         This widget will be our main window.
@@ -74,7 +78,7 @@ class Tictactoe_ui(qtw.QWidget):
                 button_xo.setMinimumHeight(100)
                 board_layout.layout().addWidget(button_xo, a_row, a_column)
 
-    def on_click(self):
+    def on_click(self) -> None:
         sender = self.sender()
         if self._model is None:
             if self._round%2 == 0:
@@ -103,8 +107,8 @@ class Tictactoe_ui(qtw.QWidget):
                 qtw.QMessageBox.warning(self, "Tictactoe", "There is no winners this time! play again!!") 
                 self.close()
 
-    def get_game_icon(self):
+    def get_game_icon(self) -> None:
         return qtg.QIcon(qtg.QPixmap(self.GAME_ICON_PIXMAP))
 
-    def show_game(self):
+    def show_game(self) -> None:
         self.show()

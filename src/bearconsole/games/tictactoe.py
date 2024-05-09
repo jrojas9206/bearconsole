@@ -13,7 +13,7 @@ class TicTacToe:
     GAME_NAME = "Tictactoe"
     VERSION = "0.0.2"
 
-    def __init__(self, player1:str="X", player2:str="O"):
+    def __init__(self, player1:str="X", player2:str="O") -> None:
         self._board = []
         self._board_view = ""
         self._a_round = 0
@@ -97,12 +97,15 @@ class TicTacToe:
     def get_gamestatus(self) -> dict:
         """
             General information about the game 
+
+            :return: dict
         """
         return self.gameStatus
 
     def verifyBoard(self) -> dict:
         """
             Verify if there is winner in row or column 
+            :return: dict
         """
         d2ret = {
                 "winner": 0, # The player id 
@@ -227,8 +230,9 @@ class TicTacToe:
         """
         self.start()
 
-    def get_player_symbole(self):
+    def get_player_symbole(self) -> tuple[str, str]:
+        """
+            Return the character that represents the player
+            :return: tuble[str,str] -> tuple[player1, player2] 
+        """
         return self._iplayer1, self._iplayer2
-
-    def get_menu(self):
-        print("Work in progress")

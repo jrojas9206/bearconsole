@@ -12,14 +12,20 @@ import sys
 import time 
 import os 
 class Menu:
-    def __init__(self, game:dict, board):
+    """
+        Console menu 
+    """
+    def __init__(self, game:dict, board) -> None:
         self.iBoard = board
         self.i_gameID =  -1
         self.lstGames = game
         self.selectedGame = ""
         self._game_requirements = {}
 
-    def start_menu(self):
+    def start_menu(self) -> None:
+        """
+            Init all the menu variables and load the game menus 
+        """
         lck = True
         state = 0 
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -48,10 +54,17 @@ class Menu:
                 self.clean_terminal()
                 state = 0
 
-    def clean_terminal(self):
+    def clean_terminal(self) -> None:
+        """
+            Clean the terminal
+        """
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def runGame(self):
+    def runGame(self) -> dict:
+        """
+            Run the selected game and return the final game status
+            :return: dict 
+        """
         runGame = True
         stateGame = 0
         active_player = 0
