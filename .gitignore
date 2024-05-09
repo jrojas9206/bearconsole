@@ -5,3 +5,5 @@
 *.sda
 .vscode/
 .venv/
+dist/
+src/*.egg-info
