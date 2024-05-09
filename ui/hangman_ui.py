@@ -1,14 +1,7 @@
-import sys
-import time
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget
-try:
-    import resources
-except ModuleNotFoundError:
-    import ui.resources
+from bearconsole.resources import resources
 
 class Hm_qeditline(qtw.QLabel):
     

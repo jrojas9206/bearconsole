@@ -1,0 +1,9 @@
+*.png
+*.jpg
+*.pyc
+*.svg
+*.sda
+.vscode/
+.venv/
+dist/
+src/*.egg-info

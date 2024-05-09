@@ -6,12 +6,13 @@ from PyQt5 import QtCore as qtc
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 
-from ui.tictactoe_ui import Tictactoe_ui
-from ui.hangman_ui import Hangman_ui
 
-from games.tictactoe import TicTacToe
-from games.hangman import Hangman
+from ui.hangman_ui import Hangman_ui
+from ui.tictactoe_ui import Tictactoe_ui
 from ui.game_console_ui import GameConsole
+
+from bearconsole.games.tictactoe import TicTacToe
+from bearconsole.games.hangman import Hangman
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
@@ -22,11 +23,6 @@ if __name__ == "__main__":
     Hm_ui = Hangman_ui(hm)
 
     gamesDict = {"paperGames":[ttt_ui, Hm_ui], "mobileGames":[]}
-
-    #ttt_model = TicTacToe()
-    #mw = Tictactoe_ui(ttt_model)
-    #hm = Hangman()
-    #Hm_ui = Hangman_ui(hm)
 
     mw = GameConsole(gamesDict)
 
