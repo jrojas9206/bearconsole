@@ -161,3 +161,6 @@ class Hangman_ui(qtw.QWidget):
 
     def get_game_icon(self) -> None:
         return qtg.QIcon(qtg.QPixmap(self.GAME_ICON_PIXMAP))
+    
+if __name__ == "__main__":
+    hm = Hangman_ui()
