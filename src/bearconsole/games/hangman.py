@@ -65,7 +65,6 @@ class Hangman:
         self._game_status_ = {
                    "winner":1 if self._win  else 0,
                    "allLose": self._end,
-                   #"end": self._end,
                    'round': self._a_round,
                    "lifes": self._attempts, 
                    "art_id": self.hagman_art_id,
@@ -98,7 +97,6 @@ class Hangman:
         self._game_status_ = {
                    "winner":1 if self._win  else 0,
                    "allLose": self._end,
-                   #"end": self._end,
                    'round': self._a_round,
                    "lifes": self._attempts, 
                    "art_id": self.hagman_art_id,
