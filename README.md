@@ -3,12 +3,12 @@
         <img src='logo/logoBear.png'/>
 </p>
 
-This project is dedicated to implement the logic and  visual representations of paper games using Python and pyQt5. Each game is compose of 2 main elements: 
+This project is dedicated to implementing the logic and visual representations of paper games using Python and pyQt5. Each game consists of 2 main elements: 
 
 1. [Game logic](https://github.com/jrojas9206/ClassicGames/tree/main/src/bearconsole/games)
 2. [Ui-Widget](https://github.com/jrojas9206/ClassicGames/tree/main/ui) 
 
-This project is a hobby, it continue active and I hope along this year (2024 - 2025) I will be able to implement more games and to improve the visuals, add some music and better animations as for the moment it more like a skeleton.  The main UI can be seen in Figure 1.
+This project is a hobby, it will continue to be active and I hope that this year (2024 - 2025) I will be able to implement more games and improve the visuals, add some music and better animations as at the moment it is more like a skeleton.  The main UI can be seen in figure 1.
 
 
 <figure>
@@ -20,7 +20,7 @@ This project is a hobby, it continue active and I hope along this year (2024 - 2
 </figure>
 
 
-The games can be run also on the terminal. An example of the game running in the console can be seen in figure 2.
+The games can also be run on the terminal. An example of a game running on the console is shown in Figure 2.
 
 <figure>
     <p align="center">
@@ -31,8 +31,7 @@ The games can be run also on the terminal. An example of the game running in the
 
 ## 1. Implemented games
 
-Currently, the platform offers the following games:
-
+The following games are currently available:
  - TicTacToe 
  - Hangman 
  - DotAndBoxes 
