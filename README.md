@@ -1,4 +1,4 @@
-# Bear Console
+# Bear station
 <p align="center">
         <img src='logo/logoBear.png'/>
 </p>
