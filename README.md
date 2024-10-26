@@ -1,9 +1,9 @@
 # Bear Console
-<center>
+<p align="center">
     <figure>
         <img src='logo/logoBear.png'/>
     </figure>
-</center>
+</p>
 
 This project is dedicated to implement the logic and  visual representations of paper games using Python and pyQt5. Each game is compose of 2 main elements: 
 
@@ -12,21 +12,21 @@ This project is dedicated to implement the logic and  visual representations of 
 
 This project is a hobby, it continue active and I hope along this year (2024 - 2025) I will be able to implement more games and to improve the visuals, add some music and better animations as for the moment it more like a skeleton.  The main UI can be seen in Figure 1.
 
-<center>
+<p align="center">
     <figure>
         <img src="logo/mainUI.png" width=300 />
         <figcaption><b>Figure 1.</b> Main console</figcaption>
     </figure>
-</center>
+</p>
 
 The games can be run also on the terminal. An example of the game running in the console can be seen in figure 2.
 
-<center>
+<p align="center">
     <figure>
         <img src='logo/tictacToe_terminal.png' width=300/>
         <figcaption><b>Figure 2.</b> TicTacToe Running on terminal</figcaption>
     </figure>
-</center>
+</p>
 
 ## 1. Implemented games
 
