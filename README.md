@@ -1,18 +1,91 @@
-# ClassicGames
-## General desicription 
-This repository contains a console of classic games. The implementation was done in python and Qt5. 
-Each game logic was implemented in a single class and there are two generic classes one to display the games called **Board** and other to control the interaction of the user with the platform called **Menu**.
+# Bear Console
+<center>
+    <figure>
+        <img src='logo/logoBear.png'/>
+    </figure>
+</center>
 
-## Implemented games
+This project is dedicated to implement the logic and  visual representations of paper games using Python and pyQt5. Each game is compose of 2 main elements: 
+
+1. [Game logic](https://github.com/jrojas9206/ClassicGames/tree/main/src/bearconsole/games)
+2. [Ui-Widget](https://github.com/jrojas9206/ClassicGames/tree/main/ui) 
+
+This project is a hobby, it continue active and I hope along this year (2024 - 2025) I will be able to implement more games and to improve the visuals, add some music and better animations as for the moment it more like a skeleton.  The main UI can be seen in Figure 1.
+
+<center>
+    <figure>
+        <img src="logo/mainUI.png"/>
+        <figcaption><b>Figure 1.</b> Main console</figcaption>
+    </figure>
+</center>
+
+The games can be run also on the terminal. An example of the game running in the console can be seen in figure 2.
+
+<center>
+    <figure>
+        <img src='logo/tictacToe_terminal.png'/>
+        <figcaption><b>Figure 2.</b> TicTacToe Running on terminal</figcaption>
+    </figure>
+</center>
+
+## 1. Implemented games
+
 Currently, the platform offers the following games:
 
- - TicTacToe [31/12/2023]
- - Hangman [06/01/2023]
- - DotAndBoxes [27/01/2024]
+ - TicTacToe 
+ - Hangman 
+ - DotAndBoxes 
 
 ## Installation 
 
-This project requires:
-- Python 3.9
-- PyQT 5
+1. Create a virtual environment to install the project.
 
+```bash
+    python -m venv .bearconsole
+```
+
+2. Activate your virtual environment 
+
+- GNU/Linux
+
+```bash
+    source .bearconsole/bin/activate 
+```
+
+-  Windows 
+
+```bash
+    ./bearconsole/Scripts/activate 
+```
+
+3. Install the build module 
+
+```bash
+    python -m pip install build
+```
+
+4. Build the project 
+
+```bash 
+    python -m build
+```
+
+5. Install the project 
+
+```bash
+    python -m pip install -e .
+```
+
+6. Run the app Qt/Terminal
+
+- Terminal  
+
+```bash
+    python ./terminal_app.py 
+```
+
+- Qt app  
+
+```bash
+    python ./terminal_app.py 
+```
