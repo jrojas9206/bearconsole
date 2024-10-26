@@ -87,5 +87,5 @@ The following games are currently available:
 - Qt app  
 
 ```bash
-    python ./terminal_app.py 
+    python ./app.py 
 ```
